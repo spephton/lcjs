@@ -23,3 +23,18 @@ const curry = function(fn) {
 currySum = curry(sumThree);
 
 console.log(currySum(1)(2,3));
+
+/*
+this is very handy: 
+
+const apiCall = baseUrl => endpoint => params =>
+        fetch(`${baseUrl}${endpoint}`, { ...params });
+
+const myApiCall = apiCall("https://my-api.com");
+const getUser = myApiCall("/users");
+const updateUser = myApiCall("/users/update");
+
+// Usage:
+getUser({ userId: 1 });
+updateUser({ userId: 1, name: "John Doe" });
+*/
