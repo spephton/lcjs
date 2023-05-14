@@ -4,6 +4,9 @@ var compose = function(functions) {
         let composition = x;
         for (i = functions.length -1; i >= 0; i--) {
             composition = functions[i](composition);
+            // If you wanted to preserve the behaviour of a method
+            // you could use .call(this, composition)
+            // The "this" context would need to be passed in as a parameter.
         }
         return composition;
     }
