@@ -38,3 +38,13 @@ const updateUser = myApiCall("/users/update");
 getUser({ userId: 1 });
 updateUser({ userId: 1, name: "John Doe" });
 */
+
+// this version uses recursion:
+const recursCurry = function(fn) {
+    return function curried(...args) {
+        if (args.length >= fn.length) {
+            return fn(...args);
+        }
+        return (...nextArgs) => curried(...args, ...nextArgs);
+    }
+}
