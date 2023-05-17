@@ -11,7 +11,7 @@ const curry = function(fn) {
     let argsArr = new Array();
     return function curried(...args) {
         argsArr.push(...args);
-        if (argsArr.length === fn.length) {
+        if (argsArr.length >= fn.length) {
             return fn(...argsArr);
         }
         else {
@@ -23,6 +23,11 @@ const curry = function(fn) {
 currySum = curry(sumThree);
 
 console.log(currySum(1)(2,3));
+
+partial = currySum(2);
+console.log("hi");
+console.log(partial);
+console.log(partial(3,4));
 
 /*
 this is very handy: 
