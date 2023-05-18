@@ -3,11 +3,9 @@ var TimeLimitedCache = function() {
 };
 
 TimeLimitedCache.prototype.set = function(key, value, duration) {
-    let existingItem = false;
     const storedValue = this.data.get(key);
 
     if (storedValue) {
-        existingItem = true;
         // revoke the timeout (whether or not it has longer to live than the
         // new entry)
         clearTimeout(storedValue.expiry);
@@ -18,7 +16,7 @@ TimeLimitedCache.prototype.set = function(key, value, duration) {
     }, duration);
     
     this.data.set(key, {value: value, expiry: expiry});
-    return existingItem;
+    return Boolean(storedValue);
 };
 
 TimeLimitedCache.prototype.get = function(key) {
