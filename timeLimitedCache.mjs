@@ -13,6 +13,7 @@ TimeLimitedCache.prototype.set = function(key, value, duration) {
     
     const expiry = setTimeout(() => {
         this.data.delete(key);
+        clearTimeout(expiry);
     }, duration);
     
     this.data.set(key, {value: value, expiry: expiry});
