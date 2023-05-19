@@ -2,8 +2,8 @@ let debounce = function(fn, t)
 {
 	let currentTimer;
 	return function(...args) {
-		if (currentTimer) {
-			clearTimeout(currentTimer);
+		if (currentTimer) { // this isn't neccessary
+			clearTimeout(currentTimer); // you can call this on undef ok.
 		}
 		const helper = () => fn(...args);
 		currentTimer = setTimeout(helper, t);
