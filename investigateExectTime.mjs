@@ -1,8 +1,10 @@
+import fs from 'fs/promises';
+
 const timeoutFunction = (fn, t) => {
-    let currentTimeout;
     return async (...args) => { return new Promise((res) => {
-        currentTimeout = setTimeout(() => {
+        let currentTimeout = setTimeout(() => {
             res(fn(...args));
+            clearTimeout(currentTimeout); // weird thing I want to test
         }, t)});
     }
 }
@@ -45,9 +47,11 @@ let timeAdd = timeoutFunction(myAdd, timeoutMilliSec);
 const nTrials = 1000;
 let startTime = new Date();
 let totalTime;
+let completedLoops = 0;
 
 for (let i = 0; i < nTrials; i++) {
     let process = (result) => {
+        completedLoops++;
         if (i === nTrials - 1) {
             const finishTime = new Date();
             totalTime = (finishTime - startTime - timeoutMilliSec)
@@ -68,3 +72,13 @@ await sleep(2); // hack: this goes on to the queue for the event loop after
 console.log(`Total execution time for ${nTrials} loops is ${totalTime}.`)
 console.log(`This corresponds to an average exec time per resolution of `
     + totalTime/nTrials + '.');
+console.log(completedLoops);
+
+//await fs.appendFile('runtimes.txt',  `${totalTime/nTrials}\n`);
+
+let fh = await fs.open('clearingRuntimes.txt');
+let fileContents = await fh.readFile('utf-8');
+let avgTimesList = fileContents.split('\n').map(Number);
+console.log(avgTimesList);
+let total = avgTimesList.reduce((acc, x) => acc + x, 0);
+console.log(total / avgTimesList.length);
