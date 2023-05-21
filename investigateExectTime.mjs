@@ -7,6 +7,8 @@ const timeoutFunction = (fn, t) => {
     }
 }
 
+const sleep = async (t) => new Promise((res) => setTimeout(res, t));
+
 Array.prototype.max = function() {
     if (this.length === 0) return undefined;
     let max = this[0]; // account for arb large -ive vals
@@ -16,9 +18,15 @@ Array.prototype.max = function() {
     }
     return max;
 }
-let exampleArr = [1, 2, 3, 45, 4, 5]
-console.log(exampleArr.max())
 
+function avg(array) {
+    let i;
+    let acc = 0;
+    for (i = 0; i < array.length; i++) {
+        acc += array[i];
+    }
+    return acc / array.length;
+}
 
 
 let myAdd = (a, b) => {
@@ -34,39 +42,29 @@ let myAdd = (a, b) => {
 let timeoutMilliSec = 2;
 let timeAdd = timeoutFunction(myAdd, timeoutMilliSec);
 
-const nTrials = 50;
-let totalTime = new Array(nTrials);
-let startTime = new Array(nTrials);
+const nTrials = 1000;
+let startTime = new Date();
+let totalTime;
 
 for (let i = 0; i < nTrials; i++) {
-    startTime[i] = new Date();
     let process = (result) => {
-        let after = new Date();
-        totalTime[i] = (after - startTime[i]);
+        if (i === nTrials - 1) {
+            const finishTime = new Date();
+            totalTime = (finishTime - startTime - timeoutMilliSec)
+            console.log(totalTime);
+        }
     }
+    // I've verified that all of these will resolve in order,
+    // so stopping the timer when the last promise resolves is a good 
+    // benchmark in this case... using this code and node 19 at least.
     timeAdd(1, 3).then(process);
 }
 
-const sleep = async (t) => new Promise((res) => setTimeout(res, t));
-await sleep(500); // wait for all to finish?
-console.log(totalTime.slice(-1)[0]) //this shouldn't be undef
-// yeah this is sketch but w/e
-
-console.log(totalTime.slice(0, 10));
-let etime = totalTime.map((x) => x - timeoutMilliSec);
-let maxEtime = etime.max();
-
-function avg(array) {
-    let i;
-    let acc = 0;
-    for (i = 0; i < array.length; i++) {
-        acc += array[i];
-    }
-    return acc / array.length;
-}
-
-let avgEtime = avg(etime);
-
-console.log(`Max exec time: ${maxEtime}, mean exec time = ${avgEtime}`);
-
-console.log(startTime);
+await sleep(2); // hack: this goes on to the queue for the event loop after
+// everything else, so it waits for everything else to resolve first.
+// therefore the argument to sleep() can be arbitrily small even though
+// you really need to wait 3s to be sure you're good on my machine with the 
+// code as it is at time of writing this comment.
+console.log(`Total execution time for ${nTrials} loops is ${totalTime}.`)
+console.log(`This corresponds to an average exec time per resolution of `
+    + totalTime/nTrials + '.');
