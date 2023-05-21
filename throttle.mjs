@@ -61,6 +61,21 @@ const throttle = (fn, t) => {
     }
 }
 
+// This is another way to do it, avoiding recursive calls. You could also use
+// setInterval
+var remainingTimeThrottle = function(fn, t) {
+    let timeoutId = null, restTime = 0;
+    return function(...args) {
+        const currentTime = Date.now();
+        const delay = Math.max(0, restTime - currentTime);
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => { 
+            fn(...args);
+            restTime = Date.now() + t;
+        }, delay);
+    }
+};
+
 function syncSleep(t) {
     const now = Date.now();
     while (Date.now() < now + t) {}
