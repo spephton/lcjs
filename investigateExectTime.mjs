@@ -1,10 +1,10 @@
 import fs from 'fs/promises';
+import assert from 'assert';
 
 const timeoutFunction = (fn, t) => {
     return async (...args) => { return new Promise((res) => {
         let currentTimeout = setTimeout(() => {
             res(fn(...args));
-            clearTimeout(currentTimeout); // weird thing I want to test
         }, t)});
     }
 }
@@ -74,11 +74,12 @@ console.log(`This corresponds to an average exec time per resolution of `
     + totalTime/nTrials + '.');
 console.log(completedLoops);
 
-//await fs.appendFile('runtimes.txt',  `${totalTime/nTrials}\n`);
+await fs.appendFile('runtimes.txt',  `${totalTime/nTrials}\n`);
 
-let fh = await fs.open('clearingRuntimes.txt');
+let fh = await fs.open('runtimes.txt');
 let fileContents = await fh.readFile('utf-8');
 let avgTimesList = fileContents.split('\n').map(Number);
+assert(avgTimesList.pop() === 0); // trailing newline results in extra 0
 console.log(avgTimesList);
 let total = avgTimesList.reduce((acc, x) => acc + x, 0);
 console.log(total / avgTimesList.length);
