@@ -1,0 +1,15 @@
+{
+    "jej": "foo",
+    "mej": "bar",
+    "bas": 20,
+    "annoying": "true",
+    "nested" : {
+        "bing": "chandler",
+        "bong": "google (offbrand bing)",
+        "inception": {
+            "we": "have",
+            "2": 2,
+            "go": "deeper"
+        }
+    }
+}
