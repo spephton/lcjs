@@ -34,6 +34,12 @@ let areDeeplyEqual = function(o1, o2) {
 	return true;
 }
 
+// this almost works and only fails on "unsorted" objects. damn.
+let almostAreDeeplyEqual = function(o1, o2) {
+        let stringy1 = JSON.stringify(o1);
+        let stringy2 = JSON.stringify(o2);
+        return (stringy1 === stringy2)
+}
 
 let a = { prop1: "boobs" }
 console.log(a.prop1);
