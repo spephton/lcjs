@@ -12,13 +12,14 @@ let jsonStringify = function(object) {
 		if (Array.isArray(object)) {
 			thisObject += '[';
 			for (let i = 0; i < object.length; i++) {
-				thisObject += jsonStringify(object[i]);
+				thisObject += jsonStringify(object[i]); // not acct for sparse arrays
 				thisObject += ',';
 			}
 			if (object.length === 0) {
 				thisObject += ']';
 			}
 			else {
+				// drop trailing comma
 				thisObject = thisObject.slice(0, -1) + ']';
 			}
 			return thisObject;
@@ -33,6 +34,7 @@ let jsonStringify = function(object) {
 				thisObject += ',';
 			}
 			if (objLen === 0) {
+				// drop trailing comma
 				thisObject += '}';
 			}
 			else {
